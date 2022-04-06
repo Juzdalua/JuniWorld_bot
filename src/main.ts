@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import Bot from './bot';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +20,8 @@ async function bootstrap() {
       transform: true,  //  change parameter type from string to our type without test app
     }),
   );
+
+  Bot();
 
   await app.listen(process.env.PORT ?? 3000);
 }
