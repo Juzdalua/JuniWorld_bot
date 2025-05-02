@@ -37,7 +37,6 @@ export class DiscordJS {
   }
 
   public async init() {
-    this.logger.debug(`Init Discord BOT...`);
     if (!(await this.addCommands())) {
       return;
     }

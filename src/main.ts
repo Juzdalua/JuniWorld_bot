@@ -21,9 +21,21 @@ async function bootstrap() {
     })
   );
 
-  await DiscordJS.getInstance().init();
-
-  await app.listen(process.env.PORT ?? 8000);
-  logger.debug(`✅ Application is running on: http://localhost:${process.env.PORT ?? 8000} 🚀`);
+  await Promise.all([
+    DiscordJS.getInstance()
+      .init()
+      .then(() => {
+        logger.debug(`✅ DiscordJS initialized.`);
+      }),
+    app.listen(process.env.PORT ?? 8000).then(() => {
+      logger.debug(`✅ Application is running on: http://localhost:${process.env.PORT ?? 8000} 🚀`);
+    })
+  ])
+    .then(() => {
+      logger.debug('🚀 All initialization tasks completed.');
+    })
+    .catch((error) => {
+      logger.error('❌ Error occurred during initialization:', error);
+    });
 }
 bootstrap();
