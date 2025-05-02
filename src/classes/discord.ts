@@ -1,6 +1,5 @@
-import { Client, REST, Routes, Events, SlashCommandBuilder, Interaction, CacheType, ChatInputCommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
-import { DiscordJSCommand, DiscordJSCommandBuilder } from './types/discord.types';
 import { Logger } from '@nestjs/common';
+import { CacheType, Client, Events, Interaction, REST, RESTPostAPIChatInputApplicationCommandsJSONBody, Routes } from 'discord.js';
 import { commandMap, commands } from './types/discord.command';
 
 export class DiscordJS {
@@ -25,7 +24,7 @@ export class DiscordJS {
     this.rest = new REST({ version: '10' }).setToken(this.DISCORD_BOT_TOKEN);
 
     this.commands = commands.map((cmd) => cmd.data.toJSON());
-    this.addCommands();
+    // this.deleteAllCommands()
   }
 
   public static getInstance(): DiscordJS {
@@ -59,11 +58,33 @@ export class DiscordJS {
 
   private async addCommands(): Promise<boolean> {
     try {
+      this.logger.debug(`⏳ DiscordJS Command Initializing... Wait for next log.`);
       await this.rest.put(Routes.applicationGuildCommands(this.DISCORD_CLIENT_ID, this.DISCORD_GUILD_ID), { body: this.commands });
       return true;
     } catch (error) {
       this.logger.error(error);
       return false;
+    }
+  }
+
+  private async deleteAllCommands() {
+    try {
+      const globalCommands: any = await this.rest.get(Routes.applicationCommands(this.DISCORD_CLIENT_ID));
+      const guildCommands: any = await this.rest.get(Routes.applicationGuildCommands(this.DISCORD_CLIENT_ID, this.DISCORD_GUILD_ID));
+
+      const deleteGlobalPromises = globalCommands.map(async (command: any) => {
+        await this.rest.delete(Routes.applicationCommand(this.DISCORD_CLIENT_ID, command.id));
+      });
+
+      const deleteGuildPromises = guildCommands.map(async (command: any) => {
+        await this.rest.delete(Routes.applicationGuildCommand(this.DISCORD_CLIENT_ID, this.DISCORD_GUILD_ID, command.id));
+      });
+
+      await Promise.all([...deleteGlobalPromises, ...deleteGuildPromises]);
+
+      console.log('✅ All commands have been deleted.');
+    } catch (error) {
+      console.error('❌ Error deleting commands:', error);
     }
   }
 }
