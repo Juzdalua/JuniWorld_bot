@@ -25,4 +25,4 @@
 <img src="https://i.imgur.com/vvlRb1C.png" />
 
 3. 서버 우클릭 - 서버 ID 복사
-<img src="https://i.imgur.com/Z38ZU8w.png" /
+<img src="https://i.imgur.com/Z38ZU8w.png" />
