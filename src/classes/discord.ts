@@ -1,7 +1,7 @@
-import { Client, REST, Routes, Events, SlashCommandBuilder, Interaction, CacheType, ChatInputCommandInteraction } from 'discord.js';
-import { DiscordJSCommand } from './types/discord.types';
+import { Client, REST, Routes, Events, SlashCommandBuilder, Interaction, CacheType, ChatInputCommandInteraction, RESTPostAPIChatInputApplicationCommandsJSONBody } from 'discord.js';
+import { DiscordJSCommand, DiscordJSCommandBuilder } from './types/discord.types';
 import { Logger } from '@nestjs/common';
-import commands from './types/discord.command';
+import { commandMap, commands } from './types/discord.command';
 
 export class DiscordJS {
   private readonly logger = new Logger(DiscordJS.name);
@@ -13,7 +13,7 @@ export class DiscordJS {
 
   private client: Client;
   private rest: REST;
-  private commands: Array<DiscordJSCommand>;
+  private commands: Array<RESTPostAPIChatInputApplicationCommandsJSONBody>;
 
   constructor() {
     this.DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
@@ -24,7 +24,7 @@ export class DiscordJS {
 
     this.rest = new REST({ version: '10' }).setToken(this.DISCORD_BOT_TOKEN);
 
-    this.commands = commands.map((cmd) => cmd.toJSON());
+    this.commands = commands.map((cmd) => cmd.data.toJSON());
     this.addCommands();
   }
 
@@ -53,18 +53,10 @@ export class DiscordJS {
       }
 
       this.logger.debug(interaction.commandName);
-      this.commandMap(interaction);
+      commandMap(interaction);
     });
 
     await this.client.login(this.DISCORD_BOT_TOKEN);
-  }
-
-  private commandMap(interaction: ChatInputCommandInteraction) {
-    switch (interaction.commandName.toLowerCase()) {
-      case 'ping':
-        interaction.reply('pong');
-        break;
-    }
   }
 
   private async addCommands(): Promise<boolean> {
