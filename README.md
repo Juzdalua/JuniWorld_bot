@@ -1,3 +1,6 @@
+# Discord.js
+[Link](https://discord.js.org/docs/packages/discord.js/main)
+
 # Discord Dev Portal
 [Link](https://discord.com/developers/applications)
 
