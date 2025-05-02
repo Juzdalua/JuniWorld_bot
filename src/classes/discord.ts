@@ -52,7 +52,6 @@ export class DiscordJS {
         return;
       }
 
-      this.logger.debug(interaction.commandName);
       commandMap(interaction);
     });
 
