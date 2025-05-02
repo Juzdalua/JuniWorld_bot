@@ -24,12 +24,72 @@ export const commands: Array<DiscordJSCommandBuilder> = [
         ]
       });
     }
+  },
+  {
+    data: new SlashCommandBuilder()
+      .setName('fow')
+      .setDescription('for.kr 전적검색')
+      .addStringOption((option) => option.setName('소환사명').setDescription('검색할 소환사명').setRequired(true)) as SlashCommandBuilder,
+    execute: async (interaction: ChatInputCommandInteraction) => {
+      const rowQuery = interaction.options.getString('소환사명');
+      let query = rowQuery;
+
+      if (query.length == 2) {
+        query = `${query[0]}+${query[1]}`;
+      }
+
+      query = query.trim().replace(/\s+/g, '+');
+      query = query.replace('#', '-');
+
+      await interaction.reply({
+        embeds: [
+          {
+            title: `for.lol 전적검색: ${rowQuery}`,
+            description: `${query}`,
+            url: `https://www.fow.lol/find/kr/${query}`,
+            image: { url: `https://www.fow.lol/find/kr/${query}` }
+          }
+        ]
+      });
+    }
+  },
+  {
+    data: new SlashCommandBuilder()
+      .setName('opgg')
+      .setDescription('op.gg 전적검색')
+      .addStringOption((option) => option.setName('소환사명').setDescription('검색할 소환사명').setRequired(true)) as SlashCommandBuilder,
+    execute: async (interaction: ChatInputCommandInteraction) => {
+      const rowQuery = interaction.options.getString('소환사명');
+      let query = rowQuery;
+
+      if (query.length == 2) {
+        query = `${query[0]}+${query[1]}`;
+      }
+
+      query = query.trim().replace(/\s+/g, '+');
+      query = query.replace('#', '-');
+
+      await interaction.reply({
+        embeds: [
+          {
+            title: `op.gg 전적검색: ${rowQuery}`,
+            description: `${query}`,
+            url: `https://op.gg/ko/lol/summoners/kr/${query}`,
+            image: { url: `https://op.gg/ko/lol/summoners/kr/${query}` }
+          }
+        ]
+      });
+    }
   }
 ];
 
 export const commandMap = async (interaction: ChatInputCommandInteraction) => {
-  const command = commands.find((cmd: DiscordJSCommandBuilder) => cmd.data.name == interaction.commandName);
-  if (!command) return;
+  try {
+    const command = commands.find((cmd: DiscordJSCommandBuilder) => cmd.data.name == interaction.commandName);
+    if (!command) return;
 
-  await command.execute(interaction);
+    await command.execute(interaction);
+  } catch (error) {
+    console.error(error);
+  }
 };
