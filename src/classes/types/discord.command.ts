@@ -14,8 +14,8 @@ export const commands: Array<DiscordJSCommandBuilder> = [
       await interaction.reply({
         embeds: [
           {
-            title: 'TEST EM',
-            description: 'TTTT',
+            title: '눈사람아저씨',
+            description: 'Tic Tak Tok',
             color: 0x5865f2,
             image: {
               url: 'https://c.tenor.com/-_VCzW__yRcAAAAC/tenor.gif'
