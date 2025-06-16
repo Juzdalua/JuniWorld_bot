@@ -94,6 +94,7 @@ export const commandMap = async (interaction: ChatInputCommandInteraction) => {
 
     await command.execute(interaction);
   } catch (error) {
+    console.error(interaction);
     console.error(error);
   }
 };
