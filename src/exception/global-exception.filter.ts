@@ -6,7 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-import { saveLogger } from 'src/utils/custom-logger';
+import { saveLogger } from '../utils/custom-logger';
 
 @Catch(HttpException)
 export class GlobalExceptionFilter implements ExceptionFilter {
