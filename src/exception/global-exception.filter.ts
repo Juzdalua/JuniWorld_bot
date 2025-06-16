@@ -1,11 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  HttpStatus,
-  Logger,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { saveLogger } from '../utils/custom-logger';
 
 @Catch(HttpException)
@@ -15,24 +8,16 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-    const status = exception.getStatus
-      ? exception.getStatus()
-      : HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = exception.getStatus ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const exceptionResponse = exception.getResponse() as
-      | string
-      | { message: string | string[]; error: string };
+    const exceptionResponse = exception.getResponse() as string | { message: string | string[]; error: string };
 
-    const message =
-      typeof exceptionResponse === 'string'
-        ? exceptionResponse
-        : exceptionResponse.message;
+    const message = typeof exceptionResponse === 'string' ? exceptionResponse : exceptionResponse.message;
 
-    const error =
-      typeof exceptionResponse === 'string' ? null : exceptionResponse['error'];
+    const error = typeof exceptionResponse === 'string' ? null : exceptionResponse['error'];
 
     console.log(exception);
-    saveLogger.error(`[${status}] ${message}\n`);
+    // saveLogger.error(`[${status}] ${message}\n`);
 
     // response.status(status).json({
     //   success: false,
@@ -44,7 +29,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       statusCode: status,
       message,
-      error,
+      error
     });
   }
 }
